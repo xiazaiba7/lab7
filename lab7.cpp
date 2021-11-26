@@ -679,6 +679,7 @@ int ConstDef(int index)
 				int weidu=0;
 				shuzu newshuzu;
 				newshuzu.name=constname;
+				newshuzu.length=0;
 				for(int i=0;i<identstable[index].shuzus.size();i++)
 				{
 					if(identstable[index].shuzus[i].name==constname)
@@ -849,6 +850,17 @@ int ConstInitVal(int index)
 		{
 			num++;
 		}
+		if(letter[num]=="}")
+		{
+			while(address+1<identstable[index].shuzus.back().length)
+			{	
+				address++;
+				identstable[index].shuzus.back().value.push_back(0);	
+			}
+			constdef=false;
+			num++;
+			return 2;
+		}
 		int yiwei=0;
 		int numcan=0; 
 		if(letter[num]=="{")
@@ -959,10 +971,10 @@ int ConstInitVal(int index)
 		{
 			top1=-1;
 			top2=-1;
-			if(identstable[index].shuzus.back().type!=1)
-			{
-				return 0;
-			}
+//			if(identstable[index].shuzus.back().type!=1)
+//			{
+//				return 0;
+//			}
 			while(letter[num]=="block")
 			{
 					num++;
@@ -976,19 +988,6 @@ int ConstInitVal(int index)
 					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
 					fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);
 				}
-//				if(index==0)
-//				{
-//					numcan++;
-//					if(numcan==1)
-//					{
-//						fprintf(out,"i32 %d",shuzi[0].value);
-//					}
-//					else
-//					{
-//						fprintf(out,", i32 %d",shuzi[0].value);
-//					}
-//				} 
-				//赋值 
 				while(letter[num]=="block")
 				{
 					num++;
@@ -1015,18 +1014,6 @@ int ConstInitVal(int index)
 			}
 			while(address+1<identstable[index].shuzus.back().length)
 			{	
-//				if(index==0)
-//				{
-//					numcan++;
-//					if(numcan==1)
-//					{
-//						fprintf(out,"i32 0");
-//					}
-//					else
-//					{
-//						fprintf(out,", i32 0");
-//					}
-//				} 
 				address++;
 				identstable[index].shuzus.back().value.push_back(0);	
 			}
@@ -1046,10 +1033,6 @@ int ConstInitVal(int index)
 			}
 			constdef=false;
 			num++;
-//			if(index==0)
-//			{
-//					fprintf(out,"]\n");
-//			} 
 			return 2;
 		}	
 	}
@@ -1133,6 +1116,17 @@ int InitVal(int index)
 		while(letter[num]=="block")
 		{
 			num++;
+		}
+		if(letter[num]=="}")
+		{
+			while(address+1<identstable[index].shuzus.back().length)
+			{	
+				address++;
+				identstable[index].shuzus.back().value.push_back(0);	
+			}
+			constdef=false;
+			num++;
+			return 2;
 		}
 		int yiwei=0;
 		if(letter[num]=="{")
@@ -1308,9 +1302,11 @@ int Vardef(int index)
 			}
 			if(letter[num]=="[")
 			{
+				
 				int weidu=0;
 				shuzu newshuzu;
 				newshuzu.name=varname;
+				newshuzu.length=0;
 				newshuzu.isconst=0;
 				if(index>0)
 				{
@@ -1641,6 +1637,7 @@ int Stmt(int index)
 				}
 				if(Exp(index)>0)
 				{
+					
 					while(letter[num]=="block")
 					{
 						num++;
@@ -2377,6 +2374,10 @@ int PrimaryExp(int opt,int numfei,int index)
 						while(letter[num]=="block")
 						{
 							num++;
+						}
+						if(address>=newshuzu.value.size())
+						{
+							return 0;
 						}
 						fprintf(out,"          %%x%d = getelementptr [%d x i32],[%d x i32]* %s, i32 0, i32 0\n",++numb,newshuzu.length,newshuzu.length,newshuzu.name2.c_str());
 						char ch[50];
