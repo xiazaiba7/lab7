@@ -23,6 +23,8 @@ char op[20000];
 stack<int> judge_blocks;
 stack<int> out_blocks; 
 int shuzublock; 
+bool isshuzudef; 
+bool ismain=false;
 struct ident 
 {
 	string name;
@@ -431,6 +433,7 @@ int symbol(string s)
  	}
  	else if(strcmp(s.c_str(),"main")==0)
  	{
+ 		ismain=true;
  		return 2;
  	}
  	else if(strcmp(s.c_str(),"return")==0)
@@ -672,9 +675,17 @@ int ConstDef(int index)
 			}
 			if(letter[num]=="[")
 			{
+				isshuzudef=true;
 				int weidu=0;
 				shuzu newshuzu;
 				newshuzu.name=constname;
+				for(int i=0;i<identstable[index].shuzus.size();i++)
+				{
+					if(identstable[index].shuzus[i].name==constname)
+					{
+						return 0;
+					}
+				}
 				if(index>0)
 				{
 					numb++;
@@ -685,7 +696,7 @@ int ConstDef(int index)
 				else
 				{
 					char ch[50];
-					sprintf(ch,"@%s",varname.c_str());
+					sprintf(ch,"@%s",newshuzu.name.c_str());
 					newshuzu.name2=ch;
 				}
 				newshuzu.length=1;
@@ -759,7 +770,6 @@ int ConstDef(int index)
 			}
 			if(letter[num]=="=")
 			{
-				
 				num++;
 				while(letter[num]=="block")
 				{
@@ -773,7 +783,7 @@ int ConstDef(int index)
 						computeshuzi(index);
 						identstable[index].idents[identstable[index].top].value=shuzi[0].value;
 						constdef=false;
-						return 1;
+						return type;
 					}
 					else
 					{
@@ -793,12 +803,13 @@ int ConstDef(int index)
 					}
 					if(ConstInitVal(index)>0)
 					{
-						return 2;
+						return type;
 					}
 				}
 			}
 			else
 			{
+				
 				return 0;
 			}
 			
@@ -824,6 +835,10 @@ int ConstInitVal(int index)
 	int a=num;
 	if(letter[num]=="{")
 	{
+//		if(index==0)
+//		{
+//			fprintf(out,"          %s = dso_local constant [%d x i32] [",identstable[index].shuzus.back().name2.c_str(),identstable[index].shuzus.back().length);
+//		}
 		constdef=true;
 		top1=-1;
 		top2=-1;
@@ -835,6 +850,7 @@ int ConstInitVal(int index)
 			num++;
 		}
 		int yiwei=0;
+		int numcan=0; 
 		if(letter[num]=="{")
 		{
 			//二维数组 
@@ -862,6 +878,18 @@ int ConstInitVal(int index)
 						fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
 						fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);
 					}
+//					if(index==0)
+//					{
+//						numcan++;
+//						if(numcan==1)
+//						{
+//							fprintf(out,"i32 %d",shuzi[0].value);
+//						}
+//						else
+//						{
+//							fprintf(out,", i32 %d",shuzi[0].value);
+//						}
+//					} 
 					//赋值 
 					while(letter[num]=="block")
 					{
@@ -909,6 +937,18 @@ int ConstInitVal(int index)
 				}
 				while(address+1<identstable[index].shuzus.back().erweilength)
 				{	
+//					if(index==0)
+//					{
+//						numcan++;
+//						if(numcan==1)
+//						{
+//							fprintf(out,"i32 0");
+//						}
+//						else
+//						{
+//							fprintf(out,", i32 0");
+//						}
+//					} 
 					address++;
 					identstable[index].shuzus.back().value.push_back(0);	
 				}	
@@ -936,6 +976,18 @@ int ConstInitVal(int index)
 					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
 					fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);
 				}
+//				if(index==0)
+//				{
+//					numcan++;
+//					if(numcan==1)
+//					{
+//						fprintf(out,"i32 %d",shuzi[0].value);
+//					}
+//					else
+//					{
+//						fprintf(out,", i32 %d",shuzi[0].value);
+//					}
+//				} 
 				//赋值 
 				while(letter[num]=="block")
 				{
@@ -963,6 +1015,18 @@ int ConstInitVal(int index)
 			}
 			while(address+1<identstable[index].shuzus.back().length)
 			{	
+//				if(index==0)
+//				{
+//					numcan++;
+//					if(numcan==1)
+//					{
+//						fprintf(out,"i32 0");
+//					}
+//					else
+//					{
+//						fprintf(out,", i32 0");
+//					}
+//				} 
 				address++;
 				identstable[index].shuzus.back().value.push_back(0);	
 			}
@@ -975,8 +1039,17 @@ int ConstInitVal(int index)
 		}
 		if(letter[num]=="}")
 		{
+			while(address+1<identstable[index].shuzus.back().length)
+			{	
+				address++;
+				identstable[index].shuzus.back().value.push_back(0);	
+			}
 			constdef=false;
 			num++;
+//			if(index==0)
+//			{
+//					fprintf(out,"]\n");
+//			} 
 			return 2;
 		}	
 	}
@@ -2209,7 +2282,7 @@ int PrimaryExp(int opt,int numfei,int index)
 				shuzu newshuzu;
 				for(int k=index;k>=0;k=identstable[k].outnum)
 				{
-					for(int i=0;i<=identstable[k].shuzus.size();i++)
+					for(int i=0;i<identstable[k].shuzus.size();i++)
 					{
 						if(identstable[k].shuzus[i].name==temp)
 						{
@@ -2237,7 +2310,7 @@ int PrimaryExp(int opt,int numfei,int index)
 					num++;
 				}
 				op[++top2]='(';		
-				int address;
+				int address=0;
 				if(Exp(index)>0)
 				{
 					while(op[top2]!='(')
@@ -2249,7 +2322,7 @@ int PrimaryExp(int opt,int numfei,int index)
 					//computeshuzi(index);
 					int yiwei=shuzi[top1].value;
 					top1--;
-					if(newshuzu.erweilength>0)
+					if(newshuzu.type==2)
 						address=yiwei*newshuzu.erweilength;
 					else
 						address=yiwei;
@@ -2946,33 +3019,68 @@ int quanjuDecl()
 				int j=num;
 				if(ConstDef(0)>0)
 				{
-					for(int i=0;i<=identstable[0].top;i++)
+//					for(int i=0;i<identstable[0].top;i++)
+//					{
+//						if(identstable[0].idents[i].name==constname)
+//							return 0;
+//					}
+					if(isshuzudef=true)
 					{
-						if(identstable[0].idents[i].name==constname)
-							return 0;
+						fprintf(out,"          %s = dso_local constant [%d x i32] [",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+						for(int i=0;i<identstable[0].shuzus.back().length;i++)
+						{
+							if(i==0)
+							{
+								fprintf(out,"i32 %d",identstable[0].shuzus.back().value[i]);
+							}
+							else
+							{
+								fprintf(out,", i32 %d",identstable[0].shuzus.back().value[i]);
+							}
+						}
+						fprintf(out,"]\n");
+						isshuzudef=false;
 					}
-					identstable[0].idents[++identstable[0].top].name=constname;
-					identstable[0].idents[identstable[0].top].type=0;
-					identstable[0].idents[identstable[0].top].value=shuzi[0].value;
+					while(letter[num]=="block")
+					{
+						num++;
+					}
+//					else
+//					{
+//						
+//					}
+//					identstable[0].idents[++identstable[0].top].name=constname;
+//					identstable[0].idents[identstable[0].top].type=0;
+//					identstable[0].idents[identstable[0].top].value=shuzi[0].value;
 				}
 				else
 				{
-					num=j;
-					if(judgeword(letter[num],num)>0)
+					while(letter[num]=="block")
 					{
-						for(int i=0;i<=identstable[0].top;i++)
+						num++;
+					}
+//						for(int i=0;i<=identstable[0].top;i++)
+//						{
+//							if(identstable[0].idents[i].name==constname)
+//								return 0;
+//						}
+					if(isshuzudef=true)
+					{
+						fprintf(out,"          %s = dso_local constant [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+						isshuzudef=false;
+						for(int j=0;j<identstable[0].shuzus.back().length;j++)
 						{
-							if(identstable[0].idents[i].name==constname)
-								return 0;
+							identstable[0].shuzus.back().value.push_back(0);
 						}
-						identstable[0].idents[++identstable[0].top].name=constname;
-						identstable[0].idents[identstable[0].top].type=0;
-						identstable[0].idents[identstable[0].top].value=0;
 					}
-					else
+					while(letter[num]=="block")
 					{
-						return 0;
+						num++;
 					}
+//						identstable[0].idents[++identstable[0].top].name=constname;
+//						identstable[0].idents[identstable[0].top].type=0;
+//						identstable[0].idents[identstable[0].top].value=0;
+					
 				}
 				while(letter[num]==",")
 				{
@@ -2980,33 +3088,63 @@ int quanjuDecl()
 					int j=num;
 					if(ConstDef(0)>0)
 					{
-						for(int i=0;i<=identstable[0].top;i++)
+						if(isshuzudef=true)
 						{
-							if(identstable[0].idents[i].name==constname)
-								return 0;
+							fprintf(out,"          %s = dso_local constant [%d x i32] [",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+							for(int i=0;i<identstable[0].shuzus.back().length;i++)
+							{
+								if(i==0)
+								{
+									fprintf(out,"i32 %d",identstable[0].shuzus.back().value[i]);
+								}
+								else
+								{
+									fprintf(out,", i32 %d",identstable[0].shuzus.back().value[i]);
+								}
+							}
+							fprintf(out,"]\n");
+							isshuzudef=false;
 						}
-						identstable[0].idents[++identstable[0].top].name=constname;
-						identstable[0].idents[identstable[0].top].type=0;
-						identstable[0].idents[identstable[0].top].value=shuzi[0].value;
+						while(letter[num]=="block")
+						{
+							num++;
+						}
+//						for(int i=0;i<=identstable[0].top;i++)
+//						{
+//							if(identstable[0].idents[i].name==constname)
+//								return 0;
+//						}
+//						identstable[0].idents[++identstable[0].top].name=constname;
+//						identstable[0].idents[identstable[0].top].type=0;
+//						identstable[0].idents[identstable[0].top].value=shuzi[0].value;
 					}
 					else
 					{
-						num=j;
-						if(judgeword(letter[num],num)>0)
+//						for(int i=0;i<=identstable[0].top;i++)
+//						{
+//							if(identstable[0].idents[i].name==constname)
+//								return 0;
+//						}
+						while(letter[num]=="block")
 						{
-							for(int i=0;i<=identstable[0].top;i++)
+							num++;
+						}
+						if(isshuzudef=true)
+						{
+							fprintf(out,"          %s = dso_local constant [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+							isshuzudef=false;
+							for(int j=0;j<identstable[0].shuzus.back().length;j++)
 							{
-								if(identstable[0].idents[i].name==constname)
-									return 0;
+								identstable[0].shuzus.back().value.push_back(0);
 							}
-							identstable[0].idents[++identstable[0].top].name=constname;
-							identstable[0].idents[identstable[0].top].type=0;
-							identstable[0].idents[identstable[0].top].value=0;
 						}
-						else
+						while(letter[num]=="block")
 						{
-							return 0;
+							num++;
 						}
+//						identstable[0].idents[++identstable[0].top].name=constname;
+//						identstable[0].idents[identstable[0].top].type=0;
+//						identstable[0].idents[identstable[0].top].value=0;	
 					}
 					
 				}
@@ -3040,82 +3178,139 @@ int quanjuDecl()
 			int j=num;	
 			if(ConstDef(0)>0)
 			{
-				for(int i=0;i<=identstable[0].top;i++)
+//				for(int i=0;i<=identstable[0].top;i++)
+//				{
+//					if(identstable[0].idents[i].name==constname)
+//						return 0;
+//				}
+//				identstable[0].idents[++identstable[0].top].name=constname;
+//				identstable[0].idents[identstable[0].top].type=1;
+//				identstable[0].idents[identstable[0].top].value=shuzi[0].value;
+//				char ch[10];
+//				sprintf(ch,"@%s",constname.c_str());
+//				identstable[0].idents[identstable[0].top].name2=ch;
+				if(isshuzudef==true)
 				{
-					if(identstable[0].idents[i].name==constname)
-						return 0;
-				}
-				identstable[0].idents[++identstable[0].top].name=constname;
-				identstable[0].idents[identstable[0].top].type=1;
-				identstable[0].idents[identstable[0].top].value=shuzi[0].value;
-				char ch[10];
-				sprintf(ch,"@%s",constname.c_str());
-				identstable[0].idents[identstable[0].top].name2=ch;
-				fprintf(out,"%s = dso_local global i32 %d\n",identstable[0].idents[identstable[0].top].name2.c_str(),shuzi[0].value);
-			}
-			else
-			{
-				num=j;
-				if(judgeword(letter[num],num)>0)
-				{
-					for(int i=0;i<=identstable[0].top;i++)
+					fprintf(out,"          %s = dso_local global [%d x i32] [",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+					for(int i=0;i<identstable[0].shuzus.back().length;i++)
 					{
-						if(identstable[0].idents[i].name==constname)
-							return 0;
+						if(i==0)
+						{
+							fprintf(out,"i32 %d",identstable[0].shuzus.back().value[i]);
+						}
+						else
+						{
+							fprintf(out,", i32 %d",identstable[0].shuzus.back().value[i]);
+						}
 					}
-					identstable[0].idents[++identstable[0].top].name=constname;
-					identstable[0].idents[identstable[0].top].type=1;
-					identstable[0].idents[identstable[0].top].value=0;
-					char ch[10];
-					sprintf(ch,"@%s",constname.c_str());
-					identstable[0].idents[identstable[0].top].name2=ch;
-					fprintf(out,"%s = dso_local global i32 0\n",identstable[0].idents[identstable[0].top].name2.c_str());
+					fprintf(out,"]\n");
+					isshuzudef=false;
 				}
 				else
 				{
+					fprintf(out,"%s = dso_local global i32 %d\n",identstable[0].idents[identstable[0].top].name2.c_str(),shuzi[0].value);
+				}
+				while(letter[num]=="block")
+				{
+					num++;
+				}
+			}
+			else
+			{
+
+				while(letter[num]=="block")
+				{
+					num++;
+				}
+				if(ismain==true)
+				{
+					ismain=false;
 					return 0;
+				}
+//					for(int i=0;i<=identstable[0].top;i++)
+//					{
+//						if(identstable[0].idents[i].name==constname)
+//							return 0;
+//					}
+//					identstable[0].idents[++identstable[0].top].name=constname;
+//					identstable[0].idents[identstable[0].top].type=1;
+//					identstable[0].idents[identstable[0].top].value=0;
+//					char ch[10];
+//					sprintf(ch,"@%s",constname.c_str());
+//					identstable[0].idents[identstable[0].top].name2=ch;
+				if(isshuzudef=true)
+				{
+					fprintf(out,"          %s = dso_local global [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+					isshuzudef=false;
+					for(int j=0;j<identstable[0].shuzus.back().length;j++)
+					{
+						identstable[0].shuzus.back().value.push_back(0);
+					}
+				}
+				else
+				{
+					fprintf(out,"%s = dso_local global i32 0\n",identstable[0].idents[identstable[0].top].name2.c_str());
+				}
+				while(letter[num]=="block")
+				{
+					num++;
 				}
 			}
 			while(letter[num]==",")
 			{
 				num++;
 				int j=num;
-				if(ConstDef(0)>0)
+				int x = ConstDef(0);
+				if(x>0)
 				{
-					for(int i=0;i<=identstable[0].top;i++)
+					if(isshuzudef==true)
 					{
-						if(identstable[0].idents[i].name==constname)
-							return 0;
-					}
-					identstable[0].idents[++identstable[0].top].name=constname;
-					identstable[0].idents[identstable[0].top].type=1;
-					identstable[0].idents[identstable[0].top].value=shuzi[0].value;
-					char ch[10];
-					sprintf(ch,"@%s",constname.c_str());
-					identstable[0].idents[identstable[0].top].name2=ch;
-					fprintf(out,"%s = dso_local global i32 %d\n",identstable[0].idents[identstable[0].top].name2.c_str(),shuzi[0].value);
-				}
-				else
-				{
-					num=j;
-					if(judgeword(letter[num],num)>0)
-					{
-						for(int i=0;i<=identstable[0].top;i++)
+						fprintf(out,"          %s = dso_local global [%d x i32] [",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+						for(int i=0;i<identstable[0].shuzus.back().length;i++)
 						{
-							if(identstable[0].idents[i].name==constname)
-								return 0;
+							if(i==0)
+							{
+								fprintf(out,"i32 %d",identstable[0].shuzus.back().value[i]);
+							}
+							else
+							{
+								fprintf(out,", i32 %d",identstable[0].shuzus.back().value[i]);
+							}
 						}
-						identstable[0].idents[++identstable[0].top].name=constname;
-						identstable[0].idents[identstable[0].top].type=1;
-				 		identstable[0].idents[identstable[0].top].value=0;
-						char ch[10];
-						sprintf(ch,"@%s",constname.c_str());
-						identstable[0].idents[identstable[0].top].name2=ch;
-						fprintf(out,"%s = dso_local global i32 0\n",identstable[0].idents[identstable[0].top].name2.c_str());
+						fprintf(out,"]\n");
+						isshuzudef=false;
+						while(letter[num]=="block")
+						{
+							num++;
+						}
 					}
 					else
 					{
-						return 0;
+						fprintf(out,"%s = dso_local global i32 %d\n",identstable[0].idents[identstable[0].top].name2.c_str(),shuzi[0].value);
+					}	
+				}
+				else
+				{
+					while(letter[num]=="block")
+					{
+						num++;
+					}
+					if(isshuzudef=true)
+					{
+						fprintf(out,"          %s = dso_local global [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
+						isshuzudef=false;
+						for(int j=0;j<identstable[0].shuzus.back().length;j++)
+						{
+							identstable[0].shuzus.back().value.push_back(0);
+						}
+					}
+					else
+					{
+						fprintf(out,"%s = dso_local global i32 0\n",identstable[0].idents[identstable[0].top].name2.c_str());
+					}
+					while(letter[num]=="block")
+					{
+						num++;
 					}
 				}
 			}
