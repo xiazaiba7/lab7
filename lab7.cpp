@@ -50,8 +50,8 @@ struct identtable
 	int top;
 	int outnum;//上层符号表的编号 
 };
-identtable identstable[100];
-ident shuzi[2000];
+identtable identstable[1000];
+ident shuzi[20000];
 int top1=-1,top2=-1;
 string temp;
 int tempvalue;
@@ -352,7 +352,7 @@ void PrintLOr(ident yuan)
 }
 int q[100];
 int top=0;
-int result= -1;
+int result= -100862;
 int MulExp(int index);
 int PrimaryExp(int index);
 int AddExp(int index);
@@ -377,6 +377,7 @@ int Cond(int index);
 int ConstInitVal(int index);
 int InitVal(int index);
 int computeshuzi(int index);
+int Lval();
 int symbol(string s)
 {
 	if(s=="(")
@@ -836,10 +837,6 @@ int ConstInitVal(int index)
 	int a=num;
 	if(letter[num]=="{")
 	{
-//		if(index==0)
-//		{
-//			fprintf(out,"          %s = dso_local constant [%d x i32] [",identstable[index].shuzus.back().name2.c_str(),identstable[index].shuzus.back().length);
-//		}
 		constdef=true;
 		top1=-1;
 		top2=-1;
@@ -890,19 +887,6 @@ int ConstInitVal(int index)
 						fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
 						fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);
 					}
-//					if(index==0)
-//					{
-//						numcan++;
-//						if(numcan==1)
-//						{
-//							fprintf(out,"i32 %d",shuzi[0].value);
-//						}
-//						else
-//						{
-//							fprintf(out,", i32 %d",shuzi[0].value);
-//						}
-//					} 
-					//赋值 
 					while(letter[num]=="block")
 					{
 						num++;
@@ -949,18 +933,6 @@ int ConstInitVal(int index)
 				}
 				while(address+1<identstable[index].shuzus.back().erweilength)
 				{	
-//					if(index==0)
-//					{
-//						numcan++;
-//						if(numcan==1)
-//						{
-//							fprintf(out,"i32 0");
-//						}
-//						else
-//						{
-//							fprintf(out,", i32 0");
-//						}
-//					} 
 					address++;
 					identstable[index].shuzus.back().value.push_back(0);	
 				}	
@@ -971,10 +943,6 @@ int ConstInitVal(int index)
 		{
 			top1=-1;
 			top2=-1;
-//			if(identstable[index].shuzus.back().type!=1)
-//			{
-//				return 0;
-//			}
 			while(letter[num]=="block")
 			{
 					num++;
@@ -1099,6 +1067,51 @@ int VarDecl(int index)
 		return 0;
 	}
 }
+int Lval()
+{
+	while(letter[num]=="block")
+	{
+		num++;
+	}
+	int j=num;
+	int a=judgeword(letter[num],num);
+	if(a==3)
+	{
+		while(letter[num]=="block")
+		{
+			num++;
+		}
+		while(letter[num]=="[")
+		{
+			while(letter[num]!="]")
+			{
+				num++;
+			}
+			num++;
+			while(letter[num]=="block")
+			{
+				num++;
+			}
+		}
+		while(letter[num]=="block")
+		{
+			num++;
+		}
+		if(letter[num]=="=")
+		{
+			num=j;
+			return 1;
+		}
+		else
+		{
+			num=j;
+			return 2;
+		}
+	}
+	num=j;
+	return 2;
+	
+ } 
 int InitVal(int index)
 {
 	while(letter[num]=="block")
@@ -1268,6 +1281,11 @@ int InitVal(int index)
 		}
 		if(letter[num]=="}")
 		{
+			while(address+1<identstable[index].shuzus.back().length)
+			{	
+				address++;
+				identstable[index].shuzus.back().value.push_back(0);	
+			}
 			num++;
 			return 2;
 		}	
@@ -1460,6 +1478,10 @@ int Vardef(int index)
 			}
 			else
 			{
+				for(int i=0;i<identstable[index].shuzus.back().length;i++)
+				{
+					identstable[index].shuzus.back().value.push_back(0);
+				} 
 				return 1;
 			}
 		}
@@ -1491,31 +1513,34 @@ int Stmt(int index)
 		num++;
 		return 3;
 	}
-	if(Exp(index)>0)
+	if(Lval()==2)
 	{
-		int biaoji=0;
-		while(letter[num]=="block")
+		if(Exp(index)>0)
 		{
-			num++;
-		}
-		if(letter[num]=="=")
-		{
-			goto part2;
-		}
-		while(top2!=-1)
-		{
-			operate(op[top2]);
-			top2--;
-		}
-		if(letter[num]==";")
-		{
-			num++;
-			return 3;
-		}
-		else
-		{
-			printf("4\n");
-			return 0;
+			int biaoji=0;
+			while(letter[num]=="block")
+			{
+				num++;
+			}
+			if(letter[num]=="=")
+			{
+				goto part2;
+			}
+			while(top2!=-1)
+			{
+				operate(op[top2]);
+				top2--;
+			}
+			if(letter[num]==";")
+			{
+				num++;
+				return 3;
+			}
+			else
+			{
+				printf("4\n");
+				return 0;
+			}
 		}
 	}
 	part2:
@@ -1569,6 +1594,9 @@ int Stmt(int index)
 	{
 		num=j;
 		int a = judgeword(letter[num],num);
+		int yiwei=-1;
+		int erwei=-1;
+		int address=0;
 		if(a==6)//return
 		{
 			if(Exp(index)>0)
@@ -1624,20 +1652,26 @@ int Stmt(int index)
 			int flag=0;
 			int biao=0;
 			int k;
+			bool isshuzu=false;
+			string varname=temp;
+			
 			while(letter[num]=="block")
 			{
 				num++;
 			}
-			while(letter[num]=="[")
+			if(letter[num]=="[")
 			{
+				isshuzu=true;
 				num++;
 				while(letter[num]=="block")
 				{
 					num++;
 				}
+				top1=-1;
+				top2=-1;
 				if(Exp(index)>0)
 				{
-					
+					yiwei=shuzi[0].value;
 					while(letter[num]=="block")
 					{
 						num++;
@@ -1645,6 +1679,36 @@ int Stmt(int index)
 					if(letter[num]=="]")
 					{
 						num++;
+						if(letter[num]=="[")//二维
+						{
+							num++;				
+							while(letter[num]=="block")
+							{
+								num++;
+							}
+							top1=-1;
+							top2=-1;
+							if(Exp(index)>0)
+							{
+								erwei=shuzi[0].value;			
+								while(letter[num]=="block")
+								{
+									num++;
+								}
+								if(letter[num]=="]")
+								{
+									num++;
+								}
+								else
+								{
+									return 0;
+								}
+							}
+							else
+							{
+								return 0;
+							}
+						 } 
 					}
 					else
 					{
@@ -1660,40 +1724,157 @@ int Stmt(int index)
 					num++;
 				}	
 			}
-			for(k=index;k>=0;k=identstable[k].outnum)
-			{ 
-				for(int i=0;i<=identstable[k].top;i++)
-				{
-					if(identstable[k].idents[i].name==temp)
+			if(isshuzu==false)
+			{
+				for(k=index;k>=0;k=identstable[k].outnum)
+				{ 
+					for(int i=0;i<=identstable[k].top;i++)
 					{
-						if(identstable[k].idents[i].type==0)
-							return 0;
-						else
+						if(identstable[k].idents[i].name==varname)
 						{
-							flag=1;
-							biao=i;
-							break;
+							if(identstable[k].idents[i].type==0)
+								return 0;
+							else
+							{
+								flag=1;
+								biao=i;
+								break;
+							}
 						}
 					}
+					if(flag==1)
+						break;
 				}
-				if(flag==1)
-					break;
-			}
-			if(flag==0)
-			{
-				return 0;
-			}
-			while(letter[num]=="block")
-			{
-				num++;
-			}
-			if(letter[num]=="=")
-			{
-				num++;
+				if(flag==0)
+				{
+					return 0;
+				}
 				while(letter[num]=="block")
 				{
 					num++;
 				}
+				if(letter[num]=="=")
+				{
+					num++;
+					while(letter[num]=="block")
+					{
+						num++;
+					}
+					top1=-1;
+					top2=-1;
+					if(Exp(index)>0)
+					{
+						while(letter[num]=="block")
+						{
+							num++;
+						}
+						while(top2!=-1)
+						{
+							operate(op[top2]);
+							top2--;
+						}
+						if(letter[num]==";")
+						{
+							num++;
+							if(shuzi[0].type==0)
+							{
+								fprintf(out,"          store i32 %d, i32* %s\n",shuzi[0].value,identstable[k].idents[biao].name2.c_str());
+							}
+							else if(shuzi[0].type==2)
+							{
+								fprintf(out,"          store i32 %s, i32* %s\n",shuzi[0].name2.c_str(),identstable[k].idents[biao].name2.c_str());
+							}
+							else if(shuzi[0].type==1)
+							{
+								fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,shuzi[0].name2.c_str());
+								fprintf(out,"          store i32 %%x%d, i32* %s\n",numb,identstable[k].idents[biao].name2.c_str());
+							}
+							identstable[k].idents[biao].value=shuzi[0].value;
+							return 1;
+						}
+						else
+						{
+							printf("7\n");
+							return 0;
+						}
+					}
+					else
+					{
+						printf("%s",temp.c_str());
+						printf("8\n");
+						top1=-1;
+						top2=-1;
+						num = j;
+						return 0;
+					}
+				}
+				else
+				{
+					printf("%d ",a);
+					printf("9\n");
+					num = j;
+					return 0;
+				}
+			}
+			else if(isshuzu==true)
+			{
+				shuzu keyshuzu;
+				for(k=index;k>=0;k=identstable[k].outnum)
+				{
+					for(int i=0;i<identstable[k].shuzus.size();i++)
+					{
+						if(varname==identstable[k].shuzus[i].name)
+						{
+							flag=1;
+							biao=i;
+							keyshuzu=identstable[k].shuzus[i];
+							break;
+						}
+					}
+					if(flag==1)
+					{
+						break;
+					}
+				}
+				if(erwei==-1)
+				{
+					address=yiwei;
+				}
+				else
+				{
+					address=yiwei*keyshuzu.erweilength+erwei;
+				}
+				if(flag==0)
+				{
+					return 0;
+				}
+				while(letter[num]=="block")
+				{
+					num++;
+				}
+				if(letter[num]=="=")
+				{
+					num++; 
+				}
+				else
+				{
+					return 0;
+				}
+				while(letter[num]=="block")
+				{
+					num++;
+				}
+				numb++;
+				char ch[50];
+				sprintf(ch,"%%x%d",numb);
+				basepoint = ch;
+				int length=keyshuzu.length;
+				fprintf(out,"          %s = getelementptr [%d x i32],[%d x i32]* %s, i32 0, i32 0\n",basepoint.c_str(),length,length,keyshuzu.name2.c_str());
+				fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
+				sprintf(ch,"%%x%d",numb);
+				string fuzhi=ch;
+				top1=-1;
+				top2=-1;
 				if(Exp(index)>0)
 				{
 					while(letter[num]=="block")
@@ -1710,42 +1891,35 @@ int Stmt(int index)
 						num++;
 						if(shuzi[0].type==0)
 						{
-							fprintf(out,"          store i32 %d, i32* %s\n",shuzi[0].value,identstable[k].idents[biao].name2.c_str());
+							fprintf(out,"          store i32 %d, i32* %s\n",shuzi[0].value,fuzhi.c_str());
 						}
 						else if(shuzi[0].type==2)
 						{
-							fprintf(out,"          store i32 %s, i32* %s\n",shuzi[0].name2.c_str(),identstable[k].idents[biao].name2.c_str());
+							fprintf(out,"          store i32 %s, i32* %s\n",shuzi[0].name2.c_str(),fuzhi.c_str());
 						}
 						else if(shuzi[0].type==1)
 						{
 							fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,shuzi[0].name2.c_str());
-							fprintf(out,"          store i32 %%x%d, i32* %s\n",numb,identstable[k].idents[biao].name2.c_str());
+							fprintf(out,"          store i32 %%x%d, i32* %s\n",numb,fuzhi.c_str());
 						}
-						identstable[k].idents[biao].value=shuzi[0].value;
+						identstable[k].shuzus[biao].value[address]=shuzi[0].value;
 						return 1;
 					}
 					else
 					{
-						printf("7\n");
 						return 0;
 					}
 				}
+				
+				fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);
+				if(InitVal(index)>0)
+				{
+					return 2;
+				}
 				else
 				{
-					printf("%s",temp.c_str());
-					printf("8\n");
-					top1=-1;
-					top2=-1;
-					num = j;
 					return 0;
 				}
-			}
-			else
-			{
-				printf("%d ",a);
-				printf("9\n");
-				num = j;
-				return 0;
 			}
 		}
 		else if(a==20)
@@ -2514,7 +2688,7 @@ int PrimaryExp(int opt,int numfei,int index)
 		newident.name2="";
 		newident.type=0;
 		shuzi[++top1]=newident;
-		if(result!=-1)
+		if(result!=-100862)
 		{
 			return 2;
 		}
