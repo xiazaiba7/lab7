@@ -1854,8 +1854,10 @@ int Stmt(int index)
 					newident.type=0;
 					newident.value=keyshuzu.erweilength;
 					shuzi[++top1]=newident;
-					shuzi[++top1]=erwei;
 					op[++top2]='*';
+					operate(op[top2]);
+					top2--;
+					shuzi[++top1]=erwei;
 					op[++top2]='+';
 				}
 				computeshuzi(index);
@@ -2567,6 +2569,9 @@ int PrimaryExp(int opt,int numfei,int index)
 							tempident.value=newshuzu.erweilength;
 							shuzi[++top1]=tempident;
 							op[++top2]='*';
+							operate(op[top2]);
+							top2--;
+							op[++top2]='+';
 							num++;
 							while(letter[num]=="block")
 							{
