@@ -1890,6 +1890,12 @@ int Stmt(int index)
 					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %s\n",++numb,basepoint.c_str(),address.name2.c_str());
 				else if(address.type==0)
 					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address.value);
+				else if(address.type==1)
+				{
+					fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,address.name2.c_str());
+					sprintf(ch,"%%x%d",numb);
+					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %s\n",++numb,basepoint.c_str(),ch);
+				}
 				sprintf(ch,"%%x%d",numb);
 				string fuzhi=ch;
 				top1=-1;
