@@ -3272,7 +3272,7 @@ int quanjuDecl()
 				int j=num;
 				if(ConstDef(0)>0)
 				{
-					if(isshuzudef=true)
+					if(isshuzudef==true)
 					{
 						fprintf(out,"          %s = dso_local constant [%d x i32] [",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
 						for(int i=0;i<identstable[0].shuzus.back().length;i++)
@@ -3301,7 +3301,7 @@ int quanjuDecl()
 					{
 						num++;
 					}
-					if(isshuzudef=true)
+					if(isshuzudef==true)
 					{
 						fprintf(out,"          %s = dso_local constant [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
 						isshuzudef=false;
@@ -3322,7 +3322,7 @@ int quanjuDecl()
 					int j=num;
 					if(ConstDef(0)>0)
 					{
-						if(isshuzudef=true)
+						if(isshuzudef==true)
 						{
 							fprintf(out,"          %s = dso_local constant [%d x i32] [",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
 							identstable[0].shuzus.back().isconst=1;
@@ -3351,7 +3351,7 @@ int quanjuDecl()
 						{
 							num++;
 						}
-						if(isshuzudef=true)
+						if(isshuzudef==true)
 						{
 							identstable[0].shuzus.back().isconst=1;
 							fprintf(out,"          %s = dso_local constant [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
