@@ -1704,13 +1704,6 @@ int Stmt(int index)
 								if(letter[num]=="]")
 								{
 									num++;
-//									top1=-1;
-//									top2=-1;
-//									shuzi[++top1]=yiwei;
-//									ident newident;
-//									newident.type=0;
-//									newident.value=
-//									shuzi[++top1]=
 								}
 								else
 								{
@@ -2543,6 +2536,8 @@ int PrimaryExp(int opt,int numfei,int index)
 						}
 						if(letter[num]=="[")//如果是二维数组 
 						{
+							if(newshuzu.type==1)
+								return 0;
 							ident tempident;
 							tempident.type=0;
 							tempident.value=newshuzu.erweilength;
