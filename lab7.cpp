@@ -1478,10 +1478,13 @@ int Vardef(int index)
 			}
 			else
 			{
-				for(int i=0;i<identstable[index].shuzus.back().length;i++)
+				if(type>=2)
 				{
-					identstable[index].shuzus.back().value.push_back(0);
-				} 
+					for(int i=0;i<identstable[index].shuzus.back().length;i++)
+					{
+						identstable[index].shuzus.back().value.push_back(0);
+					} 
+				}
 				return 1;
 			}
 		}
