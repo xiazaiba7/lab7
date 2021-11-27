@@ -170,7 +170,7 @@ int operate(char c)
 		shuzi[top1-1].name="";//叫啥都无所谓了 
 	}
 	top1--;
-	return shuzi[top1-1].value; 
+	return shuzi[top1].value; 
 }
 void PrintRel(int judge,ident yuan)
 {
@@ -1597,9 +1597,12 @@ int Stmt(int index)
 	{
 		num=j;
 		int a = judgeword(letter[num],num);
-		int yiwei=-1;
-		int erwei=-1;
-		int address=0;
+		ident yiwei;
+		ident erwei;
+		yiwei.type=10;
+		erwei.type=10;
+		ident address;
+		address.value=-1;
 		if(a==6)//return
 		{
 			if(Exp(index)>0)
@@ -1674,7 +1677,7 @@ int Stmt(int index)
 				top2=-1;
 				if(Exp(index)>0)
 				{
-					yiwei=shuzi[0].value;
+					yiwei=shuzi[0];
 					while(letter[num]=="block")
 					{
 						num++;
@@ -1693,7 +1696,7 @@ int Stmt(int index)
 							top2=-1;
 							if(Exp(index)>0)
 							{
-								erwei=shuzi[0].value;			
+								erwei=shuzi[0];
 								while(letter[num]=="block")
 								{
 									num++;
@@ -1701,6 +1704,13 @@ int Stmt(int index)
 								if(letter[num]=="]")
 								{
 									num++;
+//									top1=-1;
+//									top2=-1;
+//									shuzi[++top1]=yiwei;
+//									ident newident;
+//									newident.type=0;
+//									newident.value=
+//									shuzi[++top1]=
 								}
 								else
 								{
@@ -1839,14 +1849,24 @@ int Stmt(int index)
 						break;
 					}
 				}
-				if(erwei==-1)
+				top1=-1;
+				top2=-1;
+				if(yiwei.type!=10)
 				{
-					address=yiwei;
+					shuzi[++top1]=yiwei;
 				}
-				else
+				if(erwei.type!=10)
 				{
-					address=yiwei*keyshuzu.erweilength+erwei;
+					ident newident;
+					newident.type=0;
+					newident.value=keyshuzu.erweilength;
+					shuzi[++top1]=newident;
+					shuzi[++top1]=erwei;
+					op[++top2]='*';
+					op[++top2]='+';
 				}
+				computeshuzi(index);
+				address=shuzi[0];
 				if(flag==0)
 				{
 					return 0;
@@ -1871,9 +1891,12 @@ int Stmt(int index)
 				char ch[50];
 				sprintf(ch,"%%x%d",numb);
 				basepoint = ch;
-				int length=keyshuzu.length;
+				int length=keyshuzu.length;		
 				fprintf(out,"          %s = getelementptr [%d x i32],[%d x i32]* %s, i32 0, i32 0\n",basepoint.c_str(),length,length,keyshuzu.name2.c_str());
-				fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
+				if(address.type==2)
+					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %s\n",++numb,basepoint.c_str(),address.name2.c_str());
+				else if(address.type==0)
+					fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address.value);
 				sprintf(ch,"%%x%d",numb);
 				string fuzhi=ch;
 				top1=-1;
@@ -1905,7 +1928,10 @@ int Stmt(int index)
 							fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,shuzi[0].name2.c_str());
 							fprintf(out,"          store i32 %%x%d, i32* %s\n",numb,fuzhi.c_str());
 						}
-						identstable[k].shuzus[biao].value[address]=shuzi[0].value;
+						if(address.value!=-1)
+							identstable[k].shuzus[biao].value[address.value]=shuzi[0].value;
+						top1=-1;
+						top2=-1;
 						return 1;
 					}
 					else
@@ -2452,6 +2478,11 @@ int PrimaryExp(int opt,int numfei,int index)
 			}
 			if(letter[num]=="[")//是数组 
 			{
+				ident yiwei;
+				ident erwei;
+				yiwei.type=10;
+				erwei.type=10;
+				ident address;
 				int flag=0;
 				shuzu newshuzu;
 				for(int k=index;k>=0;k=identstable[k].outnum)
@@ -2484,7 +2515,6 @@ int PrimaryExp(int opt,int numfei,int index)
 					num++;
 				}
 				op[++top2]='(';		
-				int address=0;
 				if(Exp(index)>0)
 				{
 					while(op[top2]!='(')
@@ -2492,14 +2522,14 @@ int PrimaryExp(int opt,int numfei,int index)
 						operate(op[top2]);
 						top2--;
 					}
-					top2--;
 					//computeshuzi(index);
-					int yiwei=shuzi[top1].value;
-					top1--;
-					if(newshuzu.type==2)
-						address=yiwei*newshuzu.erweilength;
-					else
-						address=yiwei;
+					ident yiwei=shuzi[top1];
+//					if(newshuzu.type==2)
+//						if(yiwei.type==0)
+//							address=yiwei*newshuzu.erweilength;
+//					else
+//						if(yiwei.type==0)
+//							address=yiwei;
 					while(letter[num]=="block")
 					{
 						num++;
@@ -2513,6 +2543,11 @@ int PrimaryExp(int opt,int numfei,int index)
 						}
 						if(letter[num]=="[")//如果是二维数组 
 						{
+							ident tempident;
+							tempident.type=0;
+							tempident.value=newshuzu.erweilength;
+							shuzi[++top1]=tempident;
+							op[++top2]='*';
 							num++;
 							while(letter[num]=="block")
 							{
@@ -2527,8 +2562,11 @@ int PrimaryExp(int opt,int numfei,int index)
 									top2--;
 								}
 								top2--;
-								address+=shuzi[top1].value;
-								top1--;
+								while(op[top2]!='(')
+								{
+									operate(op[top2]);
+									top2--;
+								}
 							}
 							while(letter[num]=="block")
 							{
@@ -2547,21 +2585,26 @@ int PrimaryExp(int opt,int numfei,int index)
 								num++;
 							}
 						}
-						
+						address=shuzi[top1];
+						top1--;
+						top2--;
 						while(letter[num]=="block")
 						{
 							num++;
-						}
-						if(address>=newshuzu.value.size())
-						{
-							return 0;
 						}
 						fprintf(out,"          %%x%d = getelementptr [%d x i32],[%d x i32]* %s, i32 0, i32 0\n",++numb,newshuzu.length,newshuzu.length,newshuzu.name2.c_str());
 						char ch[50];
 						string tempstring;
 						sprintf(ch,"%%x%d",numb);
 						tempstring = ch;
-						fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,tempstring.c_str(),address);
+						if(address.type==0)
+						{
+							fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,tempstring.c_str(),address.value);
+						}
+						else if(address.type==2)
+						{
+							fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %s\n",++numb,tempstring.c_str(),address.name2.c_str());
+						}
 						sprintf(ch,"%%x%d",numb);
 						tempstring = ch;
 						fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,tempstring.c_str());
@@ -2569,7 +2612,8 @@ int PrimaryExp(int opt,int numfei,int index)
 						tempstring = ch;
 						ident newident;
 						newident.name2=tempstring;
-						newident.value=newshuzu.value[address];
+						if(address.type==0)
+							newident.value=newshuzu.value[address.value];
 						newident.name="";
 						newident.type=2;
 						shuzi[++top1]=newident;
