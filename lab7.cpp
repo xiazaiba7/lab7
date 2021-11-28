@@ -3706,6 +3706,7 @@ int main(int argc,char **argv){
 	int fd=FuncDef();
 	if(fd>0)
 	{
+		printf("可以return\n");
 		return 0;
 	}
 	else
