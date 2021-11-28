@@ -1677,6 +1677,7 @@ int Stmt(int index)
 				top2=-1;
 				if(Exp(index)>0)
 				{
+					computeshuzi(index);
 					yiwei=shuzi[0];
 					while(letter[num]=="block")
 					{
@@ -1696,6 +1697,7 @@ int Stmt(int index)
 							top2=-1;
 							if(Exp(index)>0)
 							{
+								computeshuzi(index);
 								erwei=shuzi[0];
 								while(letter[num]=="block")
 								{
@@ -3233,6 +3235,7 @@ int FuncRParams(int index)
 			num++;
 			if(Exp(index)>0)
 			{
+				computeshuzi(index);
 				while(letter[num]=="block")
 				{
 					num++;
