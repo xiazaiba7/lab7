@@ -1076,6 +1076,7 @@ int Lval()
 	}
 	int j=num;
 	int a=judgeword(letter[num],num);
+	int numkuohao=0;
 	if(a==3)
 	{
 		while(letter[num]=="block")
@@ -1083,15 +1084,23 @@ int Lval()
 			num++;
 		}
 		while(letter[num]=="[")
-		{
-			while(letter[num]!="]")
+		{	
+			if(letter[num]!="[")
 			{
-				num++;
+				numkuohao++;
+			}
+			if(letter[num]=="]")
+			{
+				numkuohao--;
 			}
 			num++;
 			while(letter[num]=="block")
 			{
 				num++;
+			}
+			if(numkuohao==0)
+			{
+				continue;
 			}
 		}
 		while(letter[num]=="block")
