@@ -1083,24 +1083,41 @@ int Lval()
 		{
 			num++;
 		}
-		while(letter[num]=="[")
+		if(letter[num]=="[")
 		{	
-			if(letter[num]!="[")
+			numkuohao=1;
+			while(numkuohao>0)
 			{
-				numkuohao++;
-			}
-			if(letter[num]=="]")
-			{
-				numkuohao--;
+				num++;
+				if(letter[num]=="]")
+				{
+					numkuohao--;
+				}
+				else if(letter[num]=="[")
+				{
+					numkuohao++;
+				}
 			}
 			num++;
 			while(letter[num]=="block")
 			{
 				num++;
 			}
-			if(numkuohao==0)
+			if(letter[num]=="[")
 			{
-				continue;
+				numkuohao=1;
+				while(numkuohao>0)
+				{
+					num++;
+					if(letter[num]=="]")
+					{
+						numkuohao--;
+					}
+					else if(letter[num]=="[")
+					{
+						numkuohao++;
+					}
+				}
 			}
 		}
 		while(letter[num]=="block")
