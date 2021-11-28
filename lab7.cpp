@@ -51,7 +51,7 @@ struct identtable
 	int outnum;//上层符号表的编号 
 };
 identtable identstable[1000];
-ident shuzi[20000];
+ident shuzi[200000];
 int top1=-1,top2=-1;
 string temp;
 int tempvalue;
@@ -706,6 +706,7 @@ int ConstDef(int index)
 				identstable[index].shuzus.push_back(newshuzu);
 				while(letter[num]=="[")
 				{
+					constdef=true;
 					type++;
 					top1=-1;
 					top2=-1;
