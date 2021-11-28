@@ -269,9 +269,9 @@ void PrintEq(int judge,ident yuan)
 void PrintLAnd(ident yuan)
 {
 	char ch[10];
-	if(yuan.type==3)
+	if(yuan.type==2)
 	{
-		fprintf(out,"          %%x%d = zext i1 %s to i32\n",++numb,yuan.name2.c_str());
+		fprintf(out,"          %%x%d = icmp ne i32 %s, 0\n",++numb,yuan.name2.c_str());
 		sprintf(ch,"%%x%d",numb);
 		yuan.name2=ch;
 	}
@@ -280,15 +280,19 @@ void PrintLAnd(ident yuan)
 		fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,yuan.name2.c_str());
 		sprintf(ch,"%%x%d",numb);
 		yuan.name2=ch;
+		fprintf(out,"          %%x%d = icmp ne i32 %s, 0\n",++numb,yuan.name2.c_str());
+		sprintf(ch,"%%x%d",numb);
+		yuan.name2=ch; 
 	}
 	if(yuan.type==0)
 	{
+		fprintf(out,"          %%x%d = icmp ne i32 %d, 0\n",++numb,yuan.value);
 		sprintf(ch,"%d",yuan.value);
 		yuan.name2=ch;
 	}
-	if(shuzi[0].type==3)
+	if(shuzi[0].type==2)
 	{
-		fprintf(out,"          %%x%d = zext i1 %s to i32\n",++numb,shuzi[0].name2.c_str());
+		fprintf(out,"          %%x%d = icmp ne i32 %s, 0\n",++numb,shuzi[0].name2.c_str());
 		sprintf(ch,"%%x%d",numb);
 		shuzi[0].name2=ch;
 	}
@@ -297,16 +301,20 @@ void PrintLAnd(ident yuan)
 		fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,shuzi[0].name2.c_str());
 		sprintf(ch,"%%x%d",numb);
 		shuzi[0].name2=ch;
+		fprintf(out,"          %%x%d = icmp ne i32 %s, 0\n",++numb,shuzi[0].name2.c_str());
+		sprintf(ch,"%%x%d",numb);
+		shuzi[0].name2=ch; 
 	}
 	if(shuzi[0].type==0)
 	{
+		fprintf(out,"          %%x%d = icmp ne i32 %d, 0\n",++numb,shuzi[0].value);
 		sprintf(ch,"%d",shuzi[0].value);
 		shuzi[0].name2=ch;
 	}
-	fprintf(out,"          %%x%d = and i32 %s, %s\n",++numb,yuan.name2.c_str(),shuzi[0].name2.c_str());
+	fprintf(out,"          %%x%d = and i1 %s, %s\n",++numb,yuan.name2.c_str(),shuzi[0].name2.c_str());
 	sprintf(ch,"%%x%d",numb);
 	shuzi[0].name2=ch;
-	shuzi[0].type=2;
+	shuzi[0].type=3;
 }
 void PrintLOr(ident yuan)
 {
