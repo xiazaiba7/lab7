@@ -1596,6 +1596,7 @@ int Stmt(int index)
 		}
 		identstable[newindex].outnum=index;
 		identstable[newindex].top=0;
+		identstable[newindex].shuzus.clear();
 		if(Blockitem(newindex)>0)
 		{
 			while(letter[num]=="block")
@@ -1694,8 +1695,7 @@ int Stmt(int index)
 			int biao=0;
 			int k;
 			bool isshuzu=false;
-			string varname=temp;
-			
+			string varname=temp;			
 			while(letter[num]=="block")
 			{
 				num++;
