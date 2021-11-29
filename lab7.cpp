@@ -1596,7 +1596,8 @@ int Stmt(int index)
 		}
 		identstable[newindex].outnum=index;
 		identstable[newindex].top=0;
-		identstable[newindex].shuzus.clear();
+		printf("%d\n",identstable[newindex].shuzus.size());
+		
 		if(Blockitem(newindex)>0)
 		{
 			while(letter[num]=="block")
@@ -3680,8 +3681,8 @@ int FuncDef()
 int main(int argc,char **argv){
 	char w;
 
-	in = fopen(argv[1],"r");
-	out = fopen(argv[2],"w");
+	in = fopen("s.txt","r");
+	out = fopen("out.txt","w");
  	int flag=0;
 	
 	fprintf(out,"declare i32 @getint()\n");
