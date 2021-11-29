@@ -1596,8 +1596,8 @@ int Stmt(int index)
 		}
 		identstable[newindex].outnum=index;
 		identstable[newindex].top=0;
-		printf("%d\n",identstable[newindex].shuzus.size());
-		
+		vector <shuzu> shuzus;
+		identstable[newindex].shuzus=shuzus; 
 		if(Blockitem(newindex)>0)
 		{
 			while(letter[num]=="block")
@@ -2544,7 +2544,8 @@ int PrimaryExp(int opt,int numfei,int index)
 				shuzu newshuzu;
 				for(int k=index;k>=0;k=identstable[k].outnum)
 				{
-					for(int i=0;i<identstable[k].shuzus.size();i++)
+					int n =identstable[k].shuzus.size();
+					for(int i=0;i<n;i++)
 					{
 						if(identstable[k].shuzus[i].name==temp)
 						{
@@ -3681,8 +3682,8 @@ int FuncDef()
 int main(int argc,char **argv){
 	char w;
 
-	in = fopen("s.txt","r");
-	out = fopen("out.txt","w");
+	in = fopen(argv[1],"r");
+	out = fopen(argv[2],"w");
  	int flag=0;
 	
 	fprintf(out,"declare i32 @getint()\n");
