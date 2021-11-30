@@ -1550,6 +1550,7 @@ int Stmt(int index)
 		num++;
 		return 3;
 	}
+	printf("到达这步了2"); 
 	if(Lval()==2)
 	{
 		if(Exp(index)>0)
@@ -1691,6 +1692,7 @@ int Stmt(int index)
 		}
 		else if(a==3)
 		{
+			printf("到达这步了");
 			int flag=0;
 			int biao=0;
 			int k;
