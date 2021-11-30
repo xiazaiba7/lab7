@@ -536,6 +536,7 @@ int Blockitem(int index)//index表示符号表的编号
 	{
 		num++;
 	}
+	printf("运行到这里了吗2\n");
 	int j = num;
 	int a=judgeword(letter[num],num); 
 	num=j;
@@ -546,6 +547,7 @@ int Blockitem(int index)//index表示符号表的编号
 	}	
 	else
 	{
+		printf("运行到这里了吗3\n");
 		printf("运行到了546行"); 
 		num = j;
 		if(Stmt(index)>0)
