@@ -940,7 +940,7 @@ int ConstInitVal(int index)
 				{
 					return 0;
 				}
-				while(address+1<identstable[index].shuzus.back().erweilength)
+				while(address+1<yiwei*identstable[index].shuzus.back().erweilength)
 				{	
 					address++;
 					identstable[index].shuzus.back().value.push_back(0);	
@@ -1247,7 +1247,7 @@ int InitVal(int index)
 				{
 					return 0;
 				}
-				while(address+1<identstable[index].shuzus.back().erweilength)
+				while(address+1<yiwei*identstable[index].shuzus.back().erweilength)
 				{	
 					address++;
 					identstable[index].shuzus.back().value.push_back(0);	
