@@ -543,6 +543,7 @@ int Blockitem(int index)//index表示符号表的编号
 	}	
 	else
 	{
+		printf("运行到了546行"); 
 		num = j;
 		if(Stmt(index)>0)
 			return 2;
