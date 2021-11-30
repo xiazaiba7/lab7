@@ -1550,11 +1550,12 @@ int Stmt(int index)
 		num++;
 		return 3;
 	}
-	printf("到达这步了2"); 
 	if(Lval()==2)
 	{
+		printf("到达了1555行\n"); 
 		if(Exp(index)>0)
 		{
+			printf("到达了1558行\n");
 			int biaoji=0;
 			while(letter[num]=="block")
 			{
@@ -1692,7 +1693,6 @@ int Stmt(int index)
 		}
 		else if(a==3)
 		{
-			printf("到达这步了");
 			int flag=0;
 			int biao=0;
 			int k;
