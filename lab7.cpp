@@ -698,7 +698,8 @@ int ConstDef(int index)
 				shuzu newshuzu;
 				newshuzu.name=constname;
 				newshuzu.length=0;
-				for(int i=0;i<identstable[index].shuzus.size();i++)
+				int n=identstable[index].shuzus.size();
+				for(int i=0;i<n;i++)
 				{
 					if(identstable[index].shuzus[i].name==constname)
 					{
@@ -877,7 +878,6 @@ int ConstInitVal(int index)
 			return 2;
 		}
 		int yiwei=0;
-		int numcan=0; 
 		if(letter[num]=="{")
 		{
 			//二维数组 
@@ -1027,6 +1027,7 @@ int ConstInitVal(int index)
 	{
 		return 1;
 	}
+	return 0;
 }
 int VarDecl(int index)
 {
@@ -1040,7 +1041,6 @@ int VarDecl(int index)
 		int a = judgeword(letter[num],num);
 		if(a==1)
 		{
-			int address=numb;
 			int b = Vardef(index);
 			if(b>0)
 			{	
@@ -1083,6 +1083,7 @@ int VarDecl(int index)
 		num=j;
 		return 0;
 	}
+	return 0;
 }
 int Lval()
 {
@@ -1879,7 +1880,8 @@ int Stmt(int index)
 				shuzu keyshuzu;
 				for(k=index;k>=0;k=identstable[k].outnum)
 				{
-					for(int i=0;i<identstable[k].shuzus.size();i++)
+					int n =identstable[k].shuzus.size();
+					for(int i=0;i<n;i++)
 					{
 						if(varname==identstable[k].shuzus[i].name)
 						{
@@ -2333,6 +2335,7 @@ int Exp(int index)
 		num=j;
 		return 0;
 	}
+	return 0;
  } 
 int AddExp(int index)
 {
@@ -2390,6 +2393,7 @@ int AddExp(int index)
 		num=j;
 		return 0;
 	}
+	return 0;
 }
 int MulExp(int index)
 {
@@ -2466,6 +2470,7 @@ int MulExp(int index)
 		num=j;
 		return 0;
 	}
+	return 0;
  } 
 int PrimaryExp(int opt,int numfei,int index)
 {
@@ -2976,7 +2981,6 @@ int RelExp(int index)
 	{
 		num++;
 	}
-	int j=num;
 	if(AddExp(index)>0)
 	{
 		while(letter[num]=="block")
@@ -3002,7 +3006,6 @@ int RelExp(int index)
 				}
 			}
 			int judge;
-			char ch[10];
 			ident yuan=shuzi[0];
 			top1=-1;
 			top2=-1;
@@ -3053,7 +3056,6 @@ int EqExp(int index)
 	{
 		num++;
 	}
-	int j=num;
 	if(RelExp(index)>0)
 	{
 		while(letter[num]=="block")
@@ -3079,7 +3081,6 @@ int EqExp(int index)
 					top2--;
 				}
 			}
-			char ch[10];
 			ident yuan=shuzi[0];
 			top1=-1;
 			top2=-1;
@@ -3126,7 +3127,6 @@ int LAndExp(int index)
 	{
 		num++;
 	}
-	int j=num;
 	if(EqExp(index)>0)
 	{
 		while(letter[num]=="block")
@@ -3151,7 +3151,6 @@ int LAndExp(int index)
 					top2--;
 				}
 			}
-			char ch[10];
 			ident yuan=shuzi[0];
 			top1=-1;
 			top2=-1;
@@ -3197,7 +3196,6 @@ int LOrExp(int index)
 		}
 		while(letter[num]=="|"&&letter[num+1]=="|")
 		{
-			char ch[10];
 			ident yuan=shuzi[0];
 			top1=-1;
 			top2=-1;
@@ -3323,7 +3321,7 @@ int quanjuDecl()
 			}
 			if(b==1)
 			{		
-				int j=num;
+//				int j=num;
 				if(ConstDef(0)>0)
 				{
 					if(isshuzudef==true)
@@ -3373,7 +3371,7 @@ int quanjuDecl()
 				while(letter[num]==",")
 				{
 					num++;
-					int j=num;
+//					int j=num;
 					if(ConstDef(0)>0)
 					{
 						if(isshuzudef==true)
@@ -3449,7 +3447,7 @@ int quanjuDecl()
 			{
 				num++;
 			}
-			int j=num;	
+//			int j=num;	
 			if(ConstDef(0)>0)
 			{
 				if(isshuzudef==true)
@@ -3521,7 +3519,7 @@ int quanjuDecl()
 			while(letter[num]==",")
 			{
 				num++;
-				int j=num;
+//				int j=num;
 				int x = ConstDef(0);
 				if(x>0)
 				{
