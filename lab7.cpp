@@ -557,7 +557,10 @@ int Blockitem(int index)//index表示符号表的编号
 }
 int Decl(int index)
 {
-	if(letter[num]=="c")
+	int j = num;
+	int a =judgeword(letter[num],num);
+	num = j;
+	if(a==7)
 	{
 		if(ConstDecl(index)>0)
 			return 1;
@@ -568,7 +571,7 @@ int Decl(int index)
 			return 0;
 		}
 	}
-	else if(letter[num]=="i")
+	else if(a==1)
 	{
 		if(VarDecl(index)>0)
 			return 2;
