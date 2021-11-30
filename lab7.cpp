@@ -1567,6 +1567,7 @@ int Stmt(int index)
 		identstable[newindex].top=0;
 		vector <shuzu> shuzus;
 		identstable[newindex].shuzus=shuzus; 
+		printf("运行到这里了吗\n");
 		if(Blockitem(newindex)>0)
 		{
 			while(letter[num]=="block")
