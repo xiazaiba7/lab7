@@ -537,9 +537,12 @@ int Blockitem(int index)//index表示符号表的编号
 		num++;
 	}
 	int j = num;
-	if(Decl(index)>0)
+	int a=judgeword(letter[num],num); 
+	num=j;
+	if(a==1||a==7)
 	{
-		return 1;	
+		if(Decl(index)>0)
+			return 1;	
 	}	
 	else
 	{
