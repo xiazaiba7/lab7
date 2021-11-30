@@ -547,10 +547,9 @@ int Blockitem(int index)//index表示符号表的编号
 	else
 	{
 		num = j;
-//		printf("运行到了这里1\n"); 
+
 		if(Stmt(index)>0)
-		{
-			printf("运行到了这里2\n"); 
+		{		
 			return 2;
 		}
 		else
@@ -1151,6 +1150,11 @@ int Lval()
 			num=j;
 			return 2;
 		}
+	}
+	else if(a>=20&&a<=25)
+	{
+		num=j;
+		return 0;
 	}
 	num=j;
 	return 2;
