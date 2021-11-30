@@ -1031,7 +1031,6 @@ int VarDecl(int index)
 		int a = judgeword(letter[num],num);
 		if(a==1)
 		{
-			numb++;
 			int address=numb;
 			int b = Vardef(index);
 			if(b>0)
