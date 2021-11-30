@@ -547,8 +547,12 @@ int Blockitem(int index)//index表示符号表的编号
 	else
 	{
 		num = j;
+		printf("运行到了这里\n"); 
 		if(Stmt(index)>0)
+		{
+			printf("运行到了这里\n"); 
 			return 2;
+		}
 		else
 		{
 			printf("%s",temp.c_str());
