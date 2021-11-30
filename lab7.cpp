@@ -1550,42 +1550,6 @@ int Stmt(int index)
 		num++;
 		return 3;
 	}
-	if(Lval()==2)
-	{
-		printf("到达了1555行\n"); 
-		if(Exp(index)>0)
-		{
-			printf("到达了1558行\n");
-			int biaoji=0;
-			while(letter[num]=="block")
-			{
-				num++;
-			}
-			if(letter[num]=="=")
-			{
-				goto part2;
-			}
-			while(top2!=-1)
-			{
-				operate(op[top2]);
-				top2--;
-			}
-			if(letter[num]==";")
-			{
-				num++;
-				return 3;
-			}
-			else
-			{
-				printf("4\n");
-				return 0;
-			}
-		}
-	}
-	part2:
-	num=j;
-	top1=-1;
-	top2=-1;
 	if(letter[num]=="{")//新建一个block 
 	{
 		num++;
@@ -1631,6 +1595,43 @@ int Stmt(int index)
 		}	
 	}
 	num=j;
+	if(Lval()==2)
+	{
+		printf("到达了1555行\n"); 
+		if(Exp(index)>0)
+		{
+			printf("到达了1558行\n");
+			int biaoji=0;
+			while(letter[num]=="block")
+			{
+				num++;
+			}
+			if(letter[num]=="=")
+			{
+				goto part2;
+			}
+			while(top2!=-1)
+			{
+				operate(op[top2]);
+				top2--;
+			}
+			if(letter[num]==";")
+			{
+				num++;
+				return 3;
+			}
+			else
+			{
+				printf("4\n");
+				return 0;
+			}
+		}
+	}
+	part2:
+	num=j;
+	top1=-1;
+	top2=-1;
+	
 	if((letter[num]>="a"&&letter[num]<="z")||(letter[num]>="A"&&letter[num]<="Z")||letter[num]=="_")
 	{
 		num=j;
