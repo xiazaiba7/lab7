@@ -3562,7 +3562,7 @@ int quanjuDecl()
 					{
 						num++;
 					}
-					if(isshuzudef=true)
+					if(isshuzudef==true)
 					{
 						identstable[0].shuzus.back().isconst=0;
 						fprintf(out,"          %s = dso_local global [%d x i32] zeroinitializer\n",identstable[0].shuzus.back().name2.c_str(),identstable[0].shuzus.back().length);
