@@ -733,7 +733,7 @@ int ConstDef(int index)
 					{
 						num++;
 					}
-					constdef==true;
+					constdef=true;
 					if(Exp(index)>0)
 					{
 						computeshuzi(index);
@@ -1400,7 +1400,7 @@ int Vardef(int index)
 					{
 						num++;
 					}
-					constdef==true;
+					constdef=true;
 					if(Exp(index)>0)
 					{
 						computeshuzi(index);
