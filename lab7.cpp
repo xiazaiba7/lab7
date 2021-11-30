@@ -1363,7 +1363,6 @@ int Vardef(int index)
 		if(a==3)
 		{
 			int type=1;
-			int length=1;
 			varname=temp;
 			while(letter[num]=="block")
 			{
@@ -1616,7 +1615,6 @@ int Stmt(int index)
 	{
 		if(Exp(index)>0)
 		{
-			int biaoji=0;
 			while(letter[num]=="block")
 			{
 				num++;
