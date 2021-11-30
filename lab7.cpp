@@ -536,7 +536,6 @@ int Blockitem(int index)//index表示符号表的编号
 	{
 		num++;
 	}
-	printf("运行到这里了吗2\n");
 	int j = num;
 	int a=judgeword(letter[num],num); 
 	num=j;
@@ -547,8 +546,6 @@ int Blockitem(int index)//index表示符号表的编号
 	}	
 	else
 	{
-		printf("运行到这里了吗3\n");
-		printf("运行到了546行"); 
 		num = j;
 		if(Stmt(index)>0)
 			return 2;
@@ -1572,7 +1569,6 @@ int Stmt(int index)
 		identstable[newindex].top=0;
 		vector <shuzu> shuzus;
 		identstable[newindex].shuzus=shuzus; 
-		printf("运行到这里了吗\n");
 		if(Blockitem(newindex)>0)
 		{
 			while(letter[num]=="block")
@@ -1607,10 +1603,8 @@ int Stmt(int index)
 	num=j;
 	if(Lval()==2)
 	{
-		printf("到达了1555行\n"); 
 		if(Exp(index)>0)
 		{
-			printf("到达了1558行\n");
 			int biaoji=0;
 			while(letter[num]=="block")
 			{
