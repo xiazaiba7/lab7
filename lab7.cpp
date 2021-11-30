@@ -559,6 +559,7 @@ int Blockitem(int index)//index表示符号表的编号
 			return 0;
 		}
 	}
+	return 0;
 }
 int Decl(int index)
 {
@@ -846,6 +847,7 @@ int ConstDef(int index)
 		num=j;
 		return 0;
 	}
+	return 0;
 }
 int ConstInitVal(int index)
 {
@@ -2724,7 +2726,6 @@ int PrimaryExp(int opt,int numfei,int index)
 			else
 			{
 				int flag=0;
-				int top3=identstable[index].top;
 				for(int k=index;k>=0;k=identstable[k].outnum)
 				{
 					for(int i=0;i<=identstable[k].top;i++)
