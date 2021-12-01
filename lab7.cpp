@@ -547,9 +547,10 @@ int Blockitem(int index)//index表示符号表的编号
 	else
 	{
 		num = j;
-
+		
 		if(Stmt(index)>0)
 		{		
+			printf("运行到了这里4\n");
 			return 2;
 		}
 		else
@@ -1593,12 +1594,9 @@ int Stmt(int index)
 					num++;
 				}
 				x=num;
-				if(letter[num]=="}")
-				{
-					break;
-				}
 			}
 			num=x;
+			printf("运行到了这里1\n");
 			if(letter[num]=="}")
 			{
 				num++;
@@ -2188,8 +2186,10 @@ int Stmt(int index)
 							fprintf(out,"          br label %%basic_block_%d\n",judge_block);
 							fprintf(out,"\n");
 							fprintf(out,"          basic_block_%d:\n",out_block);
+							printf("运行到了这里2\n");
 							judge_blocks.pop();
 							out_blocks.pop();
+							printf("运行到了这里3\n");
 							return 5;	
 						}
 						else
@@ -3696,6 +3696,7 @@ int FuncDef()
 }
 int main(int argc,char **argv){
 	char w;
+
 	in = fopen(argv[1],"r");
 	out = fopen(argv[2],"w");
  	int flag=0;
