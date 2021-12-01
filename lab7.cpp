@@ -532,7 +532,6 @@ int symbol(string s)
  }
 int Blockitem(int index)//index表示符号表的编号 
 {
-	printf("运行到了5\n");
 	while(letter[num]=="block")
 	{
 		num++;
@@ -2136,7 +2135,6 @@ int Stmt(int index)
 				fprintf(out,"          br label %%basic_block_%d\n",judge_block);
 				fprintf(out,"\n");
 				fprintf(out,"          basic_block_%d:\n",judge_block);
-				printf("运行到了这里6\n"); 
 				if(Cond(index)>0)
 				{
 					while(letter[num]=="block")
@@ -2567,7 +2565,6 @@ int PrimaryExp(int opt,int numfei,int index)
 				ident address;
 				int flag=0;
 				shuzu newshuzu;
-				printf("运行到了这里7\n");
 				for(int k=index;k>=0;k=identstable[k].outnum)
 				{
 					int n =identstable[k].shuzus.size();
@@ -2585,7 +2582,6 @@ int PrimaryExp(int opt,int numfei,int index)
 						break;
 					}
 				}
-				printf("运行到了这里8\n");
 				if(newshuzu.isconst==0&&constdef==true)
 				{
 					return 0;
@@ -2853,7 +2849,7 @@ int UnaryExp(int index)
 		num++;
 	}
 	int j=num;
-	if((letter[num]>="a"&&letter[num]<="z")||(letter[num]>="A"&&letter[num]<="Z")||letter[num]=="_")
+	if(letter[num]>="a"&&letter[num]<="z"||letter[num]>="A"&&letter[num]<="Z"||letter[num]=="_")
 	{
 		int a = judgeword(letter[num],num);
 		if(a>=10&&a<=15)
@@ -3701,8 +3697,8 @@ int FuncDef()
 int main(int argc,char **argv){
 	char w;
 
-	in = fopen("s.txt","r");
-	out = fopen("out.txt","w");
+	in = fopen(argv[1],"r");
+	out = fopen(argv[2],"w");
  	int flag=0;
 	
 	fprintf(out,"declare i32 @getint()\n");
