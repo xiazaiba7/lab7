@@ -2567,6 +2567,7 @@ int PrimaryExp(int opt,int numfei,int index)
 				ident address;
 				int flag=0;
 				shuzu newshuzu;
+				printf("运行到了这里7\n");
 				for(int k=index;k>=0;k=identstable[k].outnum)
 				{
 					int n =identstable[k].shuzus.size();
@@ -2584,6 +2585,7 @@ int PrimaryExp(int opt,int numfei,int index)
 						break;
 					}
 				}
+				printf("运行到了这里8\n");
 				if(newshuzu.isconst==0&&constdef==true)
 				{
 					return 0;
@@ -3699,8 +3701,8 @@ int FuncDef()
 int main(int argc,char **argv){
 	char w;
 
-	in = fopen(argv[1],"r");
-	out = fopen(argv[2],"w");
+	in = fopen("s.txt","r");
+	out = fopen("out.txt","w");
  	int flag=0;
 	
 	fprintf(out,"declare i32 @getint()\n");
