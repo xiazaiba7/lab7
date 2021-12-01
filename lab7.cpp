@@ -532,6 +532,7 @@ int symbol(string s)
  }
 int Blockitem(int index)//index表示符号表的编号 
 {
+	printf("运行到了5\n");
 	while(letter[num]=="block")
 	{
 		num++;
@@ -2135,6 +2136,7 @@ int Stmt(int index)
 				fprintf(out,"          br label %%basic_block_%d\n",judge_block);
 				fprintf(out,"\n");
 				fprintf(out,"          basic_block_%d:\n",judge_block);
+				printf("运行到了这里6\n"); 
 				if(Cond(index)>0)
 				{
 					while(letter[num]=="block")
@@ -2849,7 +2851,7 @@ int UnaryExp(int index)
 		num++;
 	}
 	int j=num;
-	if(letter[num]>="a"&&letter[num]<="z"||letter[num]>="A"&&letter[num]<="Z"||letter[num]=="_")
+	if((letter[num]>="a"&&letter[num]<="z")||(letter[num]>="A"&&letter[num]<="Z")||letter[num]=="_")
 	{
 		int a = judgeword(letter[num],num);
 		if(a>=10&&a<=15)
