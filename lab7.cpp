@@ -1593,6 +1593,10 @@ int Stmt(int index)
 					num++;
 				}
 				x=num;
+				if(letter[num]=="}")
+				{
+					break;
+				}
 			}
 			num=x;
 			if(letter[num]=="}")
@@ -3692,7 +3696,6 @@ int FuncDef()
 }
 int main(int argc,char **argv){
 	char w;
-
 	in = fopen(argv[1],"r");
 	out = fopen(argv[2],"w");
  	int flag=0;
