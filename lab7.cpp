@@ -886,7 +886,7 @@ int ConstInitVal(int index)
 				identstable[index].shuzus.back().value.push_back(0);	
 			}
 			constdef=false;
-			num++;
+			num+=2;
 			return 2;
 		}
 		int yiwei=0;
@@ -919,6 +919,12 @@ int ConstInitVal(int index)
 				{
 					continue;
 				}
+			}
+			else if(letter[num]==",")
+			{
+				num++;
+				skipblock();
+				continue;
 			}
 			else
 			{
@@ -1049,45 +1055,30 @@ int Lval()
 		}
 		if(letter[num]=="[")
 		{	
-			numkuohao=1;
-			while(numkuohao>0)
+			while(letter[num]=="[")
 			{
-				num++;
-				if(letter[num]=="]")
+				while(1)
 				{
-					numkuohao--;
-				}
-				else if(letter[num]=="[")
-				{
-					numkuohao++;
-				}
-			}
-			num++;
-			while(letter[num]=="block")
-			{
-				num++;
-			}
-			if(letter[num]=="[")
-			{
-				numkuohao=1;
-				while(numkuohao>0)
-				{
-					num++;
-					if(letter[num]=="]")
-					{
-						numkuohao--;
-					}
-					else if(letter[num]=="[")
+					if(letter[num]=="[")
 					{
 						numkuohao++;
 					}
+					else if(letter[num]=="]")
+					{
+						numkuohao--;
+						if(numkuohao==0)
+						{
+							num++;
+							skipblock();
+							break;
+						}
+					}
+					num++;
+					skipblock();
 				}
 			}
 		}
-		while(letter[num]=="block")
-		{
-			num++;
-		}
+		skipblock();
 		if(letter[num]=="=")
 		{
 			num=j;
@@ -1133,7 +1124,7 @@ int InitVal(int index)
 				address++;
 				identstable[index].shuzus.back().value.push_back(0);	
 			}
-			num++;
+			num+=2;
 			return 2;
 		}
 		int yiwei=0;
@@ -1165,6 +1156,12 @@ int InitVal(int index)
 				{
 					continue;
 				}
+			}
+			else if(letter[num]==",")
+			{
+				num++;
+				skipblock();
+				continue;
 			}
 			else
 			{
