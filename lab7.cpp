@@ -132,7 +132,14 @@ int operate(char c)
 		shuzi[top1-1].value=shuzi[top1].value+shuzi[top1-1].value;
 		sprintf(ch,"%%x%d",numb);
 		shuzi[top1-1].name2=ch;
-		shuzi[top1-1].type=2;
+		if(shuzi[top1-1].type==0&&shuzi[top1].type==0)
+		{
+			shuzi[top1-1].type=0;
+		}
+		else
+		{
+			shuzi[top1-1].type=2;
+		}
 		shuzi[top1-1].name="";//叫啥都无所谓了 
 	}
 	if(c=='-')
@@ -141,7 +148,14 @@ int operate(char c)
 		shuzi[top1-1].value=shuzi[top1-1].value-shuzi[top1].value;
 		sprintf(ch,"%%x%d",numb);
 		shuzi[top1-1].name2=ch;
-		shuzi[top1-1].type=2;
+		if(shuzi[top1-1].type==0&&shuzi[top1].type==0)
+		{
+			shuzi[top1-1].type=0;
+		}
+		else
+		{
+			shuzi[top1-1].type=2;
+		}
 		shuzi[top1-1].name="";//叫啥都无所谓了 
 	}
 	if(c=='*')
@@ -150,7 +164,14 @@ int operate(char c)
 		shuzi[top1-1].value=shuzi[top1-1].value*shuzi[top1].value;
 		sprintf(ch,"%%x%d",numb);
 		shuzi[top1-1].name2=ch;
-		shuzi[top1-1].type=2;
+		if(shuzi[top1-1].type==0&&shuzi[top1].type==0)
+		{
+			shuzi[top1-1].type=0;
+		}
+		else
+		{
+			shuzi[top1-1].type=2;
+		}
 		shuzi[top1-1].name="";//叫啥都无所谓了 
 	}
 	if(c=='/')
@@ -162,7 +183,14 @@ int operate(char c)
 		}
 		sprintf(ch,"%%x%d",numb);
 		shuzi[top1-1].name2=ch;
-		shuzi[top1-1].type=2;
+		if(shuzi[top1-1].type==0&&shuzi[top1].type==0)
+		{
+			shuzi[top1-1].type=0;
+		}
+		else
+		{
+			shuzi[top1-1].type=2;
+		}
 		shuzi[top1-1].name="";//叫啥都无所谓了 
 	}
 	if(c=='%')
@@ -174,7 +202,14 @@ int operate(char c)
 		}
 		sprintf(ch,"%%x%d",numb);
 		shuzi[top1-1].name2=ch;
-		shuzi[top1-1].type=2;
+		if(shuzi[top1-1].type==0&&shuzi[top1].type==0)
+		{
+			shuzi[top1-1].type=0;
+		}
+		else
+		{
+			shuzi[top1-1].type=2;
+		}
 		shuzi[top1-1].name="";//叫啥都无所谓了 
 	}
 	top1--;
@@ -931,8 +966,12 @@ int ConstInitVal(int index)
 				int templength=0;
 				top1=-1;
 				top2=-1;
-				while(Exp(index)>0)
+				while(1)
 				{
+					if(Exp(index)<=0)
+					{
+						return 0;
+					}
 					if(weidu!=identstable[index].shuzus.back().weidu)
 					{
 						return 0; 
@@ -1187,7 +1226,7 @@ int InitVal(int index)
 						if(index>0)
 						{
 							fprintf(out,"          %%x%d = getelementptr i32,i32* %s, i32 %d\n",++numb,basepoint.c_str(),address);
-							fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);
+							fprintf(out,"          store i32 %d, i32* %%x%d\n",shuzi[0].value,numb);	
 						}
 						if(letter[num]==",")
 						{
