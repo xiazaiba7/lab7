@@ -2603,7 +2603,6 @@ int PrimaryExp(int opt,int numfei,int index)
 						operate(op[top2]);
 						top2--;
 					}
-					top2--;
 					//computeshuzi(index);
 					ident yiwei=shuzi[top1];
 //					if(newshuzu.type==2)
@@ -2649,8 +2648,11 @@ int PrimaryExp(int opt,int numfei,int index)
 									top2--;
 								}
 								top2--;
-								operate(op[top2]);
-								top2--;
+								while(op[top2]!='(')
+								{
+									operate(op[top2]);
+									top2--;
+								}
 							}
 							while(letter[num]=="block")
 							{
