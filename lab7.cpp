@@ -3428,33 +3428,33 @@ int quanjuDecl()
 }
 int FuncDef()
 {
-	while(letter[num]=="block")
-	{
-		num++;
-	}
-	int j=num;
-	if(quanjuDecl()>0)
-	{
-		j=num;
-		while(letter[num]=="block")
-		{
-			num++;
-		}
-		while(quanjuDecl()>0)
-		{
-			
-			while(letter[num]=="block")
-			{
-				num++;
-			}
-			j=num;
-		}
-		num=j;
-	}
-	else
-	{
-		num=j;
-	}
+//	while(letter[num]=="block")
+//	{
+//		num++;
+//	}
+//	int j=num;
+//	if(quanjuDecl()>0)
+//	{
+//		j=num;
+//		while(letter[num]=="block")
+//		{
+//			num++;
+//		}
+//		while(quanjuDecl()>0)
+//		{
+//			
+//			while(letter[num]=="block")
+//			{
+//				num++;
+//			}
+//			j=num;
+//		}
+//		num=j;
+//	}
+//	else
+//	{
+//		num=j;
+//	}
 	while(letter[num]=="block")
 	{
 		num++;
@@ -3500,7 +3500,7 @@ int FuncDef()
 						else
 						{
 							return 0;
-						 } 
+						} 
 					}
 				}
 			}	
@@ -3508,6 +3508,30 @@ int FuncDef()
 	}
 	return 0;
 }
+int CompUnit()
+{
+	skipblock();
+	int j=num;
+	if(quanjuDecl()>0)
+	{
+		skipblock();
+		return 2;
+	}
+	else
+	{
+		num=j;
+		if(FuncDef()>0)
+		{
+			skipblock();
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	return 0;
+} 
 int main(int argc,char **argv){
 	char w;
 
@@ -3569,8 +3593,11 @@ int main(int argc,char **argv){
   			}
   		}
 	}
-	int fd=FuncDef();
-	if(fd>0)
+	while(CompUnit()>0)
+	{
+		;
+	}
+	if(num>=length)
 	{
 		printf("可以return\n");
 		return 0;
