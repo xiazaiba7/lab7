@@ -1856,8 +1856,8 @@ int Stmt(int index)
 							fprintf(out,"          %%x%d = load i32, i32* %s\n",++numb,shuzi[0].name2.c_str());
 							fprintf(out,"          store i32 %%x%d, i32* %s\n",numb,fuzhi.c_str());
 						}
-						if(address.value!=-1)
-							identstable[k].shuzus[biao].value[address.value]=shuzi[0].value;
+//						if(address.type==0)
+//							identstable[k].shuzus[biao].value[address.value]=shuzi[0].value;
 						top1=-1;
 						top2=-1;
 						return 1;
